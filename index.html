@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<style>
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:'Pretendard',-apple-system,sans-serif;color:#2D2D3A;background:#fff;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  @keyframes cmp-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @keyframes cmp-floatA{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+  @keyframes cmp-floatB{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-18px) rotate(2deg)}}
+  @keyframes cmp-floatC{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(10px) translateX(8px)}}
+  @keyframes cmp-blob{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(20px,-15px) scale(1.06)}66%{transform:translate(-15px,12px) scale(.96)}}
+  @keyframes cmp-pulse{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:.7;transform:scale(1.12)}}
+  @keyframes cmp-ring{0%{transform:scale(.5);opacity:.8}100%{transform:scale(1.6);opacity:0}}
+  @keyframes cmp-fly{0%{transform:translate(0,0) rotate(0)}50%{transform:translate(16px,-12px) rotate(10deg)}100%{transform:translate(0,0) rotate(0)}}
+  @keyframes cmp-bub{0%,100%{transform:translateY(0);opacity:.82}50%{transform:translateY(-5px);opacity:1}}
+  @keyframes cmp-pop{0%,38%{transform:scale(.5);opacity:.25}54%,100%{transform:scale(1);opacity:1}}
+</style>
+</helmet>
+
+<div style="overflow-x:clip">
+
+<!-- NAV -->
+<header data-screen-label="Nav" style="position:sticky;top:0;z-index:50;background:rgba(255,255,255,.82);backdrop-filter:blur(14px);border-bottom:1px solid #F0F0F5">
+  <div style="max-width:1200px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px">
+    <a href="#home" style="text-decoration:none;font-size:26px;font-weight:800;background:linear-gradient(90deg,#5B7FE8 0%,#7C5CFC 50%,#EC4899 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.03em">callmeparis<span style="-webkit-text-fill-color:#EC4899;color:#EC4899">.</span></a>
+
+    <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}">
+      <nav style="display:flex;align-items:center;gap:4px">
+        <sc-for list="{{ navLinks }}" as="lk" hint-placeholder-count="7">
+          <a href="{{ lk.href }}" style="text-decoration:none;padding:8px 12px;border-radius:9px;font-size:15px;font-weight:600;color:#52525E;transition:background .18s,color .18s" style-hover="background:#EEF1FD;color:#5B7FE8">{{ lk.label }}</a>
+        </sc-for>
+        <a href="https://pf.kakao.com/_xnxdDxmT" target="_blank" style="margin-left:8px;text-decoration:none;padding:11px 20px;border-radius:11px;background:linear-gradient(135deg,#5B7FE8,#7C5CFC);color:#fff;font-weight:700;font-size:15px;box-shadow:0 6px 16px rgba(91,127,232,.3);transition:transform .2s" style-hover="transform:translateY(-2px)">체험 신청</a>
+      </nav>
+    </sc-if>
+
+    <sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ toggleMenu }}" aria-label="menu" style="display:flex;flex-direction:column;justify-content:center;gap:5px;width:46px;height:46px;border:none;border-radius:13px;background:linear-gradient(135deg,#5B7FE8,#7C5CFC);cursor:pointer;padding:0 13px;box-shadow:0 6px 16px rgba(91,127,232,.3)">
+        <span style="display:block;height:2.5px;border-radius:2px;background:#fff"></span>
+        <span style="display:block;height:2.5px;border-radius:2px;background:#fff"></span>
+        <span style="display:block;height:2.5px;border-radius:2px;background:#fff"></span>
+      </button>
+    </sc-if>
+  </div>
+</header>
+
+<!-- MOBILE MENU -->
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;z-index:60;background:rgba(30,30,45,.4);backdrop-filter:blur(2px)">
+    <nav onClick="{{ stop }}" style="position:absolute;top:0;right:0;height:100%;width:min(82vw,330px);background:#fff;padding:24px 22px;display:flex;flex-direction:column;gap:6px;box-shadow:-12px 0 40px rgba(0,0,0,.16)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <span style="font-size:22px;font-weight:800;background:linear-gradient(90deg,#5B7FE8,#EC4899);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">callmeparis<span style="-webkit-text-fill-color:#EC4899">.</span></span>
+        <button onClick="{{ closeMenu }}" style="border:none;background:#F2F2F7;width:38px;height:38px;border-radius:11px;font-size:20px;cursor:pointer;color:#52525E">✕</button>
+      </div>
+      <sc-for list="{{ navLinks }}" as="lk" hint-placeholder-count="7">
+        <a href="{{ lk.href }}" onClick="{{ closeMenu }}" style="text-decoration:none;padding:14px 14px;border-radius:12px;font-size:17px;font-weight:600;color:#33333F" style-hover="background:#F4F5FB">{{ lk.label }}</a>
+      </sc-for>
+      <a href="https://pf.kakao.com/_xnxdDxmT" target="_blank" style="margin-top:12px;text-align:center;text-decoration:none;padding:15px;border-radius:13px;background:linear-gradient(135deg,#5B7FE8,#7C5CFC);color:#fff;font-weight:700;font-size:16px">체험 수업 신청하기 (1만원)</a>
+    </nav>
+  </div>
+</sc-if>
+
+<!-- HERO -->
+<section id="home" data-screen-label="Hero" style="position:relative;background:linear-gradient(180deg,#F7F6FE 0%,#FFFFFF 100%);overflow:hidden">
+  <div style="position:absolute;top:-90px;left:-80px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(124,92,252,.18),transparent 70%);animation:cmp-blob 14s ease-in-out infinite"></div>
+  <div style="position:absolute;bottom:-120px;right:-60px;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(236,72,153,.14),transparent 70%);animation:cmp-blob 18s ease-in-out infinite reverse"></div>
+
+  <div style="position:relative;max-width:1200px;margin:0 auto;padding:clamp(40px,7vw,84px) 22px;display:flex;flex-wrap:wrap;align-items:center;gap:48px">
+    <div style="flex:1 1 420px;min-width:300px">
+      <div data-reveal style="display:inline-flex;align-items:center;gap:7px;padding:7px 15px;border-radius:999px;background:#fff;border:1px solid #E6E3FA;font-weight:700;font-size:14px;color:#7C5CFC;box-shadow:0 4px 14px rgba(124,92,252,.08)">📞 전화로 배우는 프랑스어</div>
+      <h1 data-reveal style="margin:18px 0 0;font-size:clamp(27px,3.7vw,46px);line-height:1.22;font-weight:800;letter-spacing:-.035em;color:#26263A"><span style="display:block;white-space:nowrap">전화로 배우는 진짜 불어</span><span style="display:block;white-space:nowrap;background:linear-gradient(100deg,#5B7FE8,#7C5CFC 55%,#EC4899);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">바쁜 일상 속 품격 있는 루틴</span></h1>
+      <p data-reveal style="margin:20px 0 0;font-size:clamp(16px,1.7vw,18px);line-height:1.7;color:#5A5A68;max-width:480px">전화 한 통이면 언제 어디서든, 얼굴 공개 없이 파리 출신 원어민 강사와 프랑스어 연습을 시작할 수 있습니다.</p>
+
+      <div data-reveal style="display:flex;flex-wrap:wrap;gap:9px;margin-top:24px">
+        <span style="padding:9px 16px;border-radius:999px;background:#EEF1FD;color:#4D6BD6;font-weight:700;font-size:14px">#원어민강사 🇫🇷</span>
+        <span style="padding:9px 16px;border-radius:999px;background:#F3EFFE;color:#6E4FE0;font-weight:700;font-size:14px">#언제어디서나 📍</span>
+        <span style="padding:9px 16px;border-radius:999px;background:#FCEBF4;color:#D63A86;font-weight:700;font-size:14px">#얼굴공개는 NON</span>
+      </div>
+
+      <div data-reveal style="display:flex;flex-wrap:wrap;gap:12px;margin-top:30px">
+        <a href="https://pf.kakao.com/_xnxdDxmT" target="_blank" style="display:inline-flex;align-items:center;gap:9px;text-decoration:none;padding:16px 26px;border-radius:14px;background:linear-gradient(135deg,#5B7FE8,#7C5CFC);color:#fff;font-weight:700;font-size:16px;box-shadow:0 10px 24px rgba(91,127,232,.32);transition:transform .2s,box-shadow .2s" style-hover="transform:translateY(-3px);box-shadow:0 16px 30px rgba(91,127,232,.4)">체험 수업 신청하기 <span style="opacity:.85;font-weight:600">(1만원)</span></a>
+        <a href="https://mirinaefr.github.io/cmpdevis/" target="_blank" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;padding:16px 26px;border-radius:14px;background:#fff;color:#5B7FE8;border:2px solid #D9E0F7;font-weight:700;font-size:16px;transition:border-color .2s,transform .2s" style-hover="border-color:#5B7FE8;transform:translateY(-3px)">30초 만에 수강료 확인하기</a>
+      </div>
+
+      <div data-reveal style="display:flex;flex-wrap:wrap;gap:12px;margin-top:30px">
+        <div style="flex:1 1 220px;background:#fff;border:1px solid #EFEFF4;border-radius:16px;padding:15px 17px;box-shadow:0 6px 20px rgba(45,45,58,.05)">
+          <div style="color:#F5B301;font-size:14px;letter-spacing:2px">★★★★★</div>
+          <p style="margin:7px 0 0;font-size:14.5px;line-height:1.55;color:#44444F;font-weight:500">"선생님 발음이 너무 좋으셔서 전화인데도 완벽하게 잘 들렸어요!"</p>
+        </div>
+        <div style="flex:1 1 220px;background:#fff;border:1px solid #EFEFF4;border-radius:16px;padding:15px 17px;box-shadow:0 6px 20px rgba(45,45,58,.05)">
+          <div style="color:#F5B301;font-size:14px;letter-spacing:2px">★★★★★</div>
+          <p style="margin:7px 0 0;font-size:14.5px;line-height:1.55;color:#44444F;font-weight:500">"자료를 전날에 미리 보내주셔서 덜 긴장하고 편안히 말할 수 있었습니다."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO ILLUSTRATION -->
+    <div data-reveal style="flex:1 1 360px;min-width:260px;display:flex;justify-content:center">
+      <div style="position:relative;width:min(86vw,420px);aspect-ratio:1/1">
+        <div style="position:absolute;inset:8% 6%;border-radius:46% 54% 52% 48%/52% 46% 54% 48%;background:linear-gradient(150deg,#E9E5FD,#FBE7F1);animation:cmp-blob 16s ease-in-out infinite"></div>
+        <!-- phone -->
+        <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:38%;aspect-ratio:9/18;background:#26263A;border-radius:26px;padding:10px;box-shadow:0 22px 50px rgba(45,45,58,.28);animation:cmp-floatA 6s ease-in-out infinite">
+          <div style="height:100%;background:linear-gradient(160deg,#6E8DF2 0%,#9A7BF5 52%,#E983B6 100%);border-radius:17px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:14px">
+            <div style="width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.26);display:flex;align-items:center;justify-content:center;font-size:26px">🥖</div>
+            <div style="color:#fff;font-weight:700;font-size:13px">파리 원어민 강사</div>
+            <div style="color:rgba(255,255,255,.8);font-size:11px">통화 중 · 00:14</div>
+            <div style="display:flex;gap:5px;align-items:flex-end;height:22px;margin-top:4px">
+              <span style="width:4px;height:40%;background:rgba(255,255,255,.85);border-radius:2px;animation:cmp-floatA 1.1s ease-in-out infinite"></span>
+              <span style="width:4px;height:90%;background:rgba(255,255,255,.85);border-radius:2px;animation:cmp-floatA 1.3s ease-in-out infinite"></span>
+              <span style="width:4px;height:60%;background:rgba(255,255,255,.85);border-radius:2px;animation:cmp-floatA .9s ease-in-out infinite"></span>
+              <span style="width:4px;height:100%;background:rgba(255,255,255,.85);border-radius:2px;animation:cmp-floatA 1.5s ease-in-out infinite"></span>
+              <span style="width:4px;height:50%;background:rgba(255,255,255,.85);border-radius:2px;animation:cmp-floatA 1.2s ease-in-out infinite"></span>
+            </div>
+          </div>
+        </div>
+        <!-- bonjour bubble -->
+        <div style="position:absolute;top:6%;left:2%;background:#fff;border-radius:16px 16px 16px 4px;padding:11px 16px;font-weight:800;color:#5B7FE8;font-size:16px;box-shadow:0 10px 24px rgba(45,45,58,.12);animation:cmp-floatB 7s ease-in-out infinite">Bonjour ! 👋</div>
+        <!-- french flag chip -->
+        <div style="position:absolute;top:16%;right:3%;display:flex;align-items:center;gap:8px;background:#fff;border-radius:14px;padding:9px 13px;box-shadow:0 10px 24px rgba(45,45,58,.12);animation:cmp-floatC 8s ease-in-out infinite">
+          <span style="display:inline-flex;border-radius:4px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.15)"><i style="width:9px;height:18px;background:#2A52BE"></i><i style="width:9px;height:18px;background:#fff"></i><i style="width:9px;height:18px;background:#ED2939"></i></span>
+          <span style="font-weight:700;font-size:13px;color:#33333F">Français</span>
+        </div>
+        <!-- sound waves -->
+        <div style="position:absolute;bottom:14%;right:6%;width:60px;height:60px;animation:cmp-floatA 9s ease-in-out infinite">
+          <span style="position:absolute;inset:0;border:2px solid #EC4899;border-radius:50%;animation:cmp-ring 2.4s ease-out infinite"></span>
+          <span style="position:absolute;inset:0;border:2px solid #7C5CFC;border-radius:50%;animation:cmp-ring 2.4s ease-out infinite .8s"></span>
+          <span style="position:absolute;inset:38%;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,.12)">🎧</span>
+        </div>
+        <!-- allo bubble -->
+        <div style="position:absolute;bottom:8%;left:4%;background:#fff;border-radius:16px 16px 4px 16px;padding:11px 16px;font-weight:800;color:#EC4899;font-size:16px;box-shadow:0 10px 24px rgba(45,45,58,.12);animation:cmp-floatB 6.5s ease-in-out infinite .5s">Allô ! 📞</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="intro" data-screen-label="Intro / Stats" style="padding:clamp(56px,8vw,96px) 22px;background:#fff">
+  <div style="max-width:1100px;margin:0 auto;text-align:center">
+    <div data-reveal style="display:inline-flex;padding:6px 15px;border-radius:999px;background:#EEF1FD;color:#5B7FE8;font-weight:700;font-size:14px">인트로</div>
+    <h2 data-reveal style="margin:16px 0 8px;font-size:clamp(28px,4.4vw,44px);font-weight:800;letter-spacing:-.03em;color:#26263A">숫자로 증명합니다</h2>
+    <p data-reveal style="margin:0;color:#6A6A78;font-size:clamp(15px,1.7vw,18px)">파리 출신 원어민 강사의 검증된 경력</p>
+
+    <div style="{{ statGridStyle }}">
+      <sc-for list="{{ stats }}" as="s" hint-placeholder-count="3">
+        <div data-reveal style="{{ statCardStyle }}" style-hover="transform:translateY(-6px);box-shadow:0 16px 40px rgba(45,45,58,.1)">
+          <div style="{{ statNumStyle }}"><span style="color:{{ s.color }}">+</span><span data-count="{{ s.num }}">0</span>{{ s.suffix }}</div>
+          <div style="margin-top:10px;height:1px;background:#EDEDF2"></div>
+          <div style="{{ statLabelStyle }}">{{ s.label }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div data-screen-label="Marquee" style="background:linear-gradient(90deg,#5B7FE8,#7C5CFC,#EC4899);padding:15px 0;overflow:hidden;white-space:nowrap">
+  <div style="display:inline-flex;animation:cmp-marquee 26s linear infinite">
+    <span style="font-weight:700;font-size:16px;color:#fff;opacity:.96">{{ marqueeText }}{{ marqueeText }}</span>
+  </div>
+</div>
+
+<!-- PAINS -->
+<section data-screen-label="Pains" style="padding:clamp(56px,8vw,96px) 22px;background:#FAFAFC">
+  <div style="max-width:760px;margin:0 auto;text-align:center">
+    <div data-reveal style="display:inline-flex;padding:6px 15px;border-radius:999px;background:#FCEBF4;color:#D63A86;font-weight:700;font-size:14px">잠깐만!</div>
+    <h2 data-reveal style="margin:16px 0 30px;font-size:clamp(26px,4.2vw,42px);font-weight:800;letter-spacing:-.03em;color:#26263A">프랑스어 🇫🇷 연습하기 어렵죠?</h2>
+    <div style="{{ painGridStyle }}">
+      <sc-for list="{{ pains }}" as="p" hint-placeholder-count="4">
+        <div data-reveal style="{{ painCardStyle }}" style-hover="transform:translateY(-4px)">
+          <div style="{{ painIconStyle }};background:{{ p.bg }}">{{ p.icon }}</div>
+          <div style="{{ painTextStyle }}">{{ p.text }}</div>
+        </div>
+      </sc-for>
+    </div>
+    <p data-reveal style="margin:30px 0 0;font-size:clamp(16px,1.8vw,19px);line-height:1.7;color:#4A4A57;font-weight:500">전화 한 통이면 언제 어디서든, 얼굴 공개 없이<br>원어민과 프랑스어 연습을 시작할 수 있습니다.</p>
+  </div>
+</section>
+
+<!-- COURSES -->
+<section id="courses" data-screen-label="Courses" style="padding:clamp(56px,8vw,96px) 22px;background:#fff">
+  <div style="max-width:1100px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:44px">
+      <div data-reveal style="display:inline-flex;padding:6px 15px;border-radius:999px;background:#EEF1FD;color:#5B7FE8;font-weight:700;font-size:14px">과정 안내</div>
+      <h2 data-reveal style="margin:16px 0 0;font-size:clamp(28px,4.4vw,44px);font-weight:800;letter-spacing:-.03em;color:#26263A">나에게 맞는 과정 선택하기</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:22px">
+      <sc-for list="{{ courses }}" as="c" hint-placeholder-count="4">
+        <a href="{{ c.href }}" target="{{ c.target }}" data-reveal style="text-decoration:none;display:block;position:relative;background:#fff;border:1px solid #EEEEF3;border-radius:22px;padding:30px 28px;box-shadow:0 8px 30px rgba(45,45,58,.06);transition:transform .25s,box-shadow .25s,border-color .25s" style-hover="transform:translateY(-6px);box-shadow:0 18px 44px rgba(45,45,58,.12);border-color:#D9E0F7">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:13px;font-weight:800;letter-spacing:.08em;color:{{ c.color }}">{{ c.no }}</span>
+            <sc-if value="{{ c.badge }}" hint-placeholder-val="">
+              <span style="font-size:12px;font-weight:700;color:#fff;background:{{ c.color }};padding:5px 11px;border-radius:999px">{{ c.badge }}</span>
+            </sc-if>
+          </div>
+          <div style="display:flex;align-items:center;gap:11px;margin-top:14px">
+            <span style="width:46px;height:46px;border-radius:13px;background:{{ c.bg }};display:flex;align-items:center;justify-content:center;font-size:22px">{{ c.icon }}</span>
+            <h3 style="margin:0;font-size:21px;font-weight:800;color:#26263A;letter-spacing:-.02em">{{ c.title }}</h3>
+          </div>
+          <p style="margin:16px 0 0;font-size:15px;line-height:1.65;color:#5C5C69">{{ c.desc }}</p>
+          <div style="margin-top:18px;display:flex;flex-direction:column;gap:11px">
+            <sc-for list="{{ c.points }}" as="pt" hint-placeholder-count="3">
+              <div style="display:flex;align-items:flex-start;gap:9px;padding-bottom:11px;border-bottom:1px solid #F1F1F5">
+                <span style="flex:none;color:#4CAF50;font-weight:800;font-size:15px">✓</span>
+                <span style="font-size:14.5px;font-weight:700;color:#2D2D3A">{{ pt }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{ c.promo }}" hint-placeholder-val="">
+            <div style="margin-top:14px;display:flex;align-items:center;gap:9px;background:linear-gradient(135deg,#FFF1F7,#FCE7F1);border:1.5px solid #F8C6DE;border-radius:13px;padding:12px 15px">
+              <span style="flex:none;display:inline-flex;align-items:center;gap:4px;background:linear-gradient(135deg,#EC4899,#F43F8E);color:#fff;font-weight:800;font-size:15px;padding:5px 11px;border-radius:9px;box-shadow:0 4px 12px rgba(236,72,153,.32)">🎁 15%</span>
+              <span style="font-size:14px;font-weight:800;color:#D63A86;line-height:1.4">{{ c.promo }}</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ c.cta }}" hint-placeholder-val="">
+            <div style="{{ c.ctaStyle }}">{{ c.cta }} →</div>
+          </sc-if>
+        </a>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<!-- METHOD -->
+<section id="method" data-screen-label="Method" style="padding:clamp(56px,8vw,96px) 22px;background:linear-gradient(180deg,#F7F6FE,#FAFAFC)">
+  <div style="max-width:980px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:48px">
+      <div data-reveal style="display:inline-flex;padding:6px 15px;border-radius:999px;background:#F3EFFE;color:#7C5CFC;font-weight:700;font-size:14px">강의 방식</div>
+      <h2 data-reveal style="margin:16px 0 0;font-size:clamp(26px,4.2vw,42px);font-weight:800;letter-spacing:-.03em;color:#26263A"><span style="background:linear-gradient(90deg,#5B7FE8,#EC4899);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">callmeparis<span style="-webkit-text-fill-color:#EC4899">.</span></span>가 다른 이유</h2>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:22px">
+
+      <!-- STEP 1 : documents sent by email -->
+      <div data-reveal style="{{ methodRowStyle }}">
+        <div style="{{ methodIlloStyle }};background:linear-gradient(150deg,#EEF1FD,#E0E8FB)">
+          <!-- envelope -->
+          <div style="position:absolute;left:50%;bottom:20px;transform:translateX(-50%);width:118px;height:78px;background:#fff;border-radius:11px;box-shadow:0 10px 22px rgba(45,45,58,.16);overflow:hidden">
+            <div style="position:absolute;inset:0;background:linear-gradient(160deg,#F4F7FF,#E7EEFC)"></div>
+            <div style="position:absolute;top:0;left:0;width:0;height:0;border-left:59px solid transparent;border-right:59px solid transparent;border-top:46px solid #D6E0F7"></div>
+            <div style="position:absolute;left:50%;top:34px;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:8px;background:#fff;box-shadow:0 3px 8px rgba(45,45,58,.14);font-size:16px;font-weight:800;color:#5B7FE8">@</div>
+          </div>
+          <!-- document flying into envelope -->
+          <div style="position:absolute;left:50%;top:14px;transform:translateX(-50%);width:60px;height:74px;background:#fff;border-radius:8px;box-shadow:0 8px 18px rgba(45,45,58,.16);padding:10px 9px;animation:cmp-floatA 4.2s ease-in-out infinite">
+            <div style="width:52%;height:6px;border-radius:3px;background:#5B7FE8"></div>
+            <div style="margin-top:8px;display:flex;flex-direction:column;gap:5px">
+              <div style="height:4px;border-radius:2px;background:#DCE3F4"></div>
+              <div style="height:4px;border-radius:2px;background:#DCE3F4"></div>
+              <div style="height:4px;width:66%;border-radius:2px;background:#DCE3F4"></div>
+            </div>
+            <div style="position:absolute;right:7px;bottom:6px;font-size:12px">🇫🇷</div>
+          </div>
+          <div style="position:absolute;top:16px;right:18px;font-size:13px;background:#fff;padding:4px 9px;border-radius:9px;font-weight:800;color:#4D6BD6;box-shadow:0 4px 10px rgba(0,0,0,.1);animation:cmp-bub 3s ease-in-out infinite">📧 Email</div>
+        </div>
+        <div style="{{ methodTextStyle }}">
+          <span style="font-size:12px;font-weight:800;letter-spacing:.1em;color:#5B7FE8">STEP 1</span>
+          <h3 style="margin:8px 0 0;font-size:21px;font-weight:800;color:#26263A;letter-spacing:-.02em">📑 수업 전 맞춤 자료</h3>
+          <p style="margin:12px 0 0;font-size:15.5px;line-height:1.7;color:#5C5C69">모든 수업에 <strong style="color:#2D2D3A;font-weight:800">맞춤 학습 자료를 미리</strong> 준비합니다. 회화, 시사 뉴스, DELF·DALF 시험 — <strong style="color:#2D2D3A;font-weight:800">레벨과 목표에 따라 다른 자료</strong>를 수업 전 이메일로 보내드려요.</p>
+        </div>
+      </div>
+
+      <!-- STEP 2 : live phone discussion -->
+      <div data-reveal style="{{ methodRowStyle }}">
+        <div style="{{ methodIlloStyle }};background:linear-gradient(150deg,#F3EFFE,#E7DEFB)">
+          <span style="position:absolute;left:50%;top:50%;width:120px;height:120px;transform:translate(-50%,-50%);border:2px solid rgba(124,92,252,.4);border-radius:50%;animation:cmp-ring 2.6s ease-out infinite"></span>
+          <span style="position:absolute;left:50%;top:50%;width:120px;height:120px;transform:translate(-50%,-50%);border:2px solid rgba(236,72,153,.4);border-radius:50%;animation:cmp-ring 2.6s ease-out infinite .9s"></span>
+          <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:74px;height:140px;background:#26263A;border-radius:18px;padding:6px;box-shadow:0 12px 26px rgba(45,45,58,.28);animation:cmp-floatA 5s ease-in-out infinite">
+            <div style="width:100%;height:100%;border-radius:13px;background:linear-gradient(160deg,#6E8DF2,#9A7BF5);display:flex;align-items:center;justify-content:center;font-size:30px">📞</div>
+          </div>
+          <div style="position:absolute;top:14px;left:16px;background:#fff;color:#5B7FE8;font-weight:800;font-size:12px;padding:6px 10px;border-radius:11px 11px 11px 2px;box-shadow:0 4px 10px rgba(0,0,0,.12);animation:cmp-bub 3s ease-in-out infinite">Allô ?</div>
+          <div style="position:absolute;bottom:14px;right:16px;background:#EC4899;color:#fff;font-weight:800;font-size:12px;padding:6px 10px;border-radius:11px 11px 2px 11px;box-shadow:0 4px 10px rgba(0,0,0,.12);animation:cmp-bub 3s ease-in-out infinite 1.5s">Bonjour !</div>
+        </div>
+        <div style="{{ methodTextStyle }}">
+          <span style="font-size:12px;font-weight:800;letter-spacing:.1em;color:#7C5CFC">STEP 2</span>
+          <h3 style="margin:8px 0 0;font-size:21px;font-weight:800;color:#26263A;letter-spacing:-.02em">📞 강사와 대화</h3>
+          <p style="margin:12px 0 0;font-size:15.5px;line-height:1.7;color:#5C5C69">파리 출신 원어민 강사가 발음, 문법, 표현을 <strong style="color:#2D2D3A;font-weight:800">그 자리에서 바로 교정</strong>합니다. 한국어 ↔ 프랑스어를 오가며 <strong style="color:#2D2D3A;font-weight:800">14년 경력, +1,300명 이상</strong>을 가르친 전문 강사와 통화로 연습합니다.</p>
+        </div>
+      </div>
+
+      <!-- STEP 3 : corrections + extra vocabulary -->
+      <div data-reveal style="{{ methodRowStyle }}">
+        <div style="{{ methodIlloStyleTall }};background:linear-gradient(150deg,#FCEBF4,#FBDDEC)">
+          <div style="width:min(92%,228px);background:#fff;border-radius:12px;box-shadow:0 8px 18px rgba(45,45,58,.15);padding:11px 13px;display:flex;flex-direction:column;gap:7px;animation:cmp-floatA 5.4s ease-in-out infinite">
+            <div style="display:flex;align-items:center;gap:7px">
+              <span style="flex:none;font-size:12px;font-weight:900;color:#EC4899">✗</span>
+              <span style="font-size:12.5px;font-weight:700;color:#B0567F;text-decoration:line-through">J'ai visité à Busan.</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:7px;animation:cmp-pop 3s ease-in-out infinite">
+              <span style="flex:none;font-size:12px;font-weight:900;color:#4CAF50">✓</span>
+              <span style="font-size:12.5px;font-weight:800;color:#2D8B45">J'ai visité Busan.</span>
+            </div>
+            <div style="height:1px;background:#F0E2EA;margin:1px 0"></div>
+            <div style="display:flex;align-items:center;gap:7px">
+              <span style="flex:none;font-size:12px;font-weight:900;color:#EC4899">✗</span>
+              <span style="font-size:12.5px;font-weight:700;color:#B0567F;text-decoration:line-through">Selon mon avis…</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:7px;animation:cmp-pop 3s ease-in-out infinite .6s">
+              <span style="flex:none;font-size:12px;font-weight:900;color:#4CAF50">✓</span>
+              <span style="font-size:12.5px;font-weight:800;color:#2D8B45">À mon avis…</span>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px">
+              <span style="font-size:10.5px;font-weight:800;color:#7C5CFC;background:#F3EFFE;padding:3px 8px;border-radius:999px">+ d'ailleurs</span>
+              <span style="font-size:10.5px;font-weight:800;color:#5B7FE8;background:#EEF1FD;padding:3px 8px;border-radius:999px">+ en effet</span>
+            </div>
+          </div>
+        </div>
+        <div style="{{ methodTextStyle }}">
+          <span style="font-size:12px;font-weight:800;letter-spacing:.1em;color:#EC4899">STEP 3</span>
+          <h3 style="margin:8px 0 0;font-size:21px;font-weight:800;color:#26263A;letter-spacing:-.02em">🚀 수업 후 상세 피드백</h3>
+          <p style="margin:12px 0 0;font-size:15.5px;line-height:1.7;color:#5C5C69">수업이 끝나면 <strong style="color:#2D2D3A;font-weight:800">틀린 표현, 올바른 표현</strong>, 그리고 더 풍부한 표현을 위한 <strong style="color:#2D2D3A;font-weight:800">추가 어휘</strong>까지 꼼꼼하게 정리해 보내드립니다. 간단한 채팅이 아닌, <strong style="color:#2D2D3A;font-weight:800">복습 가능한 문서</strong>입니다.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews" data-screen-label="Reviews" style="padding:clamp(56px,8vw,96px) 22px;background:#fff">
+  <div style="max-width:1160px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:44px">
+      <div data-reveal style="display:inline-flex;padding:6px 15px;border-radius:999px;background:#FCEBF4;color:#D63A86;font-weight:700;font-size:14px">수업 후기</div>
+      <h2 data-reveal style="margin:16px 0 0;font-size:clamp(26px,4.2vw,42px);font-weight:800;letter-spacing:-.03em;color:#26263A;text-wrap:balance">왜 수강생들이 <span style="background:linear-gradient(90deg,#5B7FE8,#EC4899);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">callmeparis<span style="-webkit-text-fill-color:#EC4899">.</span></span>를<br>선택할까요?</h2>
+    </div>
+    <div style="columns:280px;column-gap:20px">
+      <sc-for list="{{ reviews }}" as="r" hint-placeholder-count="6">
+        <div data-reveal style="break-inside:avoid;margin-bottom:20px;background:#fff;border:1px solid #EEEEF3;border-radius:18px;padding:22px;box-shadow:0 6px 22px rgba(45,45,58,.05)">
+          <div style="display:flex;align-items:center;gap:11px">
+            <div style="flex:none;width:42px;height:42px;border-radius:50%;background:{{ r.bg }};display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:16px">{{ r.initial }}</div>
+            <div>
+              <div style="font-weight:700;font-size:15px;color:#33333F">{{ r.name }}</div>
+              <div style="font-size:12.5px;color:#9A9AA8">{{ r.role }}</div>
+            </div>
+          </div>
+          <div style="color:#F5B301;font-size:14px;letter-spacing:2px;margin-top:13px">★★★★★</div>
+          <p style="margin:11px 0 0;font-size:14.5px;line-height:1.65;color:#45454F;white-space:pre-line">{{ r.text }}</p>
+          <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:12.5px;color:#A6A6B2">{{ r.date }}</span>
+            <span style="font-size:13px;font-weight:600;color:#5B7FE8">Read More</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <div data-reveal style="text-align:center;margin-top:36px">
+      <a href="https://mirinaefr.github.io/cmpavis/" target="_blank" style="display:inline-flex;align-items:center;gap:9px;text-decoration:none;padding:15px 30px;border-radius:14px;background:#fff;color:#D63A86;border:2px solid #F8C6DE;font-weight:800;font-size:16px;box-shadow:0 8px 22px rgba(236,72,153,.12);transition:transform .2s,box-shadow .2s" style-hover="transform:translateY(-3px);box-shadow:0 14px 30px rgba(236,72,153,.22)">후기 더 보기 <span style="font-weight:600">→</span></a>
+    </div>
+  </div>
+</section>
+<section id="teacher" data-screen-label="Teacher" style="padding:clamp(56px,8vw,96px) 22px;background:#FAFAFC">
+  <div style="max-width:1080px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:46px">
+      <div data-reveal style="display:inline-flex;padding:6px 15px;border-radius:999px;background:#EEF1FD;color:#5B7FE8;font-weight:700;font-size:14px">강사 소개</div>
+      <h2 data-reveal style="margin:16px 0 0;font-size:clamp(26px,4.2vw,42px);font-weight:800;letter-spacing:-.03em;color:#26263A">한국인 대상 불어 교육 전문가</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;align-items:stretch">
+      <!-- avatar/mascot card -->
+      <div data-reveal style="{{ teacherCardStyle }}">
+        <div style="{{ teacherPhotoStyle }}"><img src="ref/teacher.png" alt="강사" style="width:100%;height:100%;object-fit:cover;object-position:center 18%"></div>
+        <div style="flex:1 1 220px">
+          <h3 style="margin:0;font-size:22px;font-weight:800;color:#26263A">파리 출신 원어민 강사</h3>
+          <p style="margin:8px 0 0;font-size:15.5px;line-height:1.65;color:#5C5C69">소르본 대학원 불어 교육 석사 · DELF/DALF 감독관 및 채점관 14년 경력의 전문가가 직접 가르칩니다.</p>
+        </div>
+      </div>
+      <div data-reveal style="background:#fff;border:1px solid #EEEEF3;border-radius:22px;padding:28px;box-shadow:0 8px 30px rgba(45,45,58,.05)">
+        <h3 style="margin:0 0 16px;font-size:18px;font-weight:800;color:#26263A">프로필</h3>
+        <div style="display:flex;flex-direction:column;gap:11px">
+          <sc-for list="{{ profile }}" as="x" hint-placeholder-count="4">
+            <div style="display:flex;gap:9px;font-size:14.5px;color:#2D2D3A;font-weight:700"><span style="color:#4CAF50">✓</span>{{ x }}</div>
+          </sc-for>
+        </div>
+      </div>
+      <div data-reveal style="background:#fff;border:1px solid #EEEEF3;border-radius:22px;padding:28px;box-shadow:0 8px 30px rgba(45,45,58,.05)">
+        <h3 style="margin:0 0 16px;font-size:18px;font-weight:800;color:#26263A">강의 경력</h3>
+        <div style="display:flex;flex-direction:column;gap:0">
+          <sc-for list="{{ career }}" as="cv" hint-placeholder-count="4">
+            <div style="display:flex;gap:14px;padding:11px 0;border-bottom:1px solid #F1F1F5">
+              <span style="flex:none;width:88px;font-weight:800;font-size:13.5px;color:#5B7FE8">{{ cv.year }}</span>
+              <span style="font-size:14.5px;font-weight:700;color:#2D2D3A">{{ cv.org }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div data-reveal style="background:#fff;border:1px solid #EEEEF3;border-radius:22px;padding:28px;box-shadow:0 8px 30px rgba(45,45,58,.05)">
+        <h3 style="margin:0 0 16px;font-size:18px;font-weight:800;color:#26263A">전문 경력</h3>
+        <div style="display:flex;flex-direction:column;gap:13px">
+          <sc-for list="{{ expertise }}" as="x" hint-placeholder-count="4">
+            <div style="display:flex;gap:9px;font-size:14.5px;line-height:1.55;color:#2D2D3A;font-weight:700"><span style="flex:none;color:#4CAF50">✓</span>{{ x }}</div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" data-screen-label="FAQ" style="padding:clamp(56px,8vw,96px) 22px;background:#fff">
+  <div style="max-width:880px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:40px">
+      <div data-reveal style="display:inline-flex;padding:6px 15px;border-radius:999px;background:#F3EFFE;color:#7C5CFC;font-weight:700;font-size:14px">FAQ</div>
+      <h2 data-reveal style="margin:16px 0 0;font-size:clamp(26px,4.2vw,42px);font-weight:800;letter-spacing:-.03em;color:#26263A">자주 묻는 질문</h2>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="8">
+        <div data-reveal style="border:1px solid #EEEEF3;border-radius:16px;background:#fff;overflow:hidden;box-shadow:0 4px 16px rgba(45,45,58,.04)">
+          <button onClick="{{ f.toggle }}" style="width:100%;display:flex;align-items:center;gap:14px;text-align:left;padding:20px 22px;border:none;background:none;cursor:pointer">
+            <span style="flex:none;width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#5B7FE8,#7C5CFC);color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center">{{ f.n }}</span>
+            <span style="flex:1;font-size:16.5px;font-weight:700;color:#2D2D3A">{{ f.q }}</span>
+            <span style="flex:none;font-size:20px;color:#9A9AA8;transition:transform .25s;transform:{{ f.rot }}">⌄</span>
+          </button>
+          <sc-if value="{{ f.open }}" hint-placeholder-val="">
+            <div style="padding:0 22px 22px 66px">
+              <div style="height:1px;background:#F0F0F5;margin-bottom:16px"></div>
+              <div style="font-size:15px;line-height:1.75;color:#54545F;white-space:pre-line">{{ f.a }}</div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section data-screen-label="CTA" style="padding:clamp(56px,8vw,100px) 22px;background:linear-gradient(135deg,#5B7FE8,#7C5CFC 55%,#EC4899)">
+  <div data-reveal style="max-width:760px;margin:0 auto;text-align:center;color:#fff">
+    <h2 style="margin:0;font-size:clamp(28px,4.6vw,46px);font-weight:800;letter-spacing:-.03em;line-height:1.25">지금, 전화 한 통으로<br>프랑스어를 시작하세요</h2>
+    <p style="margin:16px 0 32px;font-size:clamp(16px,1.8vw,19px);color:rgba(255,255,255,.85)">체험 수업은 단돈 1만원. 부담 없이 만나보세요.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:13px;justify-content:center">
+      <a href="https://pf.kakao.com/_xnxdDxmT" target="_blank" style="display:inline-flex;align-items:center;gap:9px;text-decoration:none;padding:17px 30px;border-radius:14px;background:#fff;color:#5B7FE8;font-weight:800;font-size:17px;box-shadow:0 12px 30px rgba(0,0,0,.18);transition:transform .2s" style-hover="transform:translateY(-3px)">체험 수업 신청하기 (1만원)</a>
+      <a href="https://mirinaefr.github.io/cmpdevis/" target="_blank" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;padding:17px 30px;border-radius:14px;background:rgba(255,255,255,.16);color:#fff;border:2px solid rgba(255,255,255,.55);font-weight:700;font-size:17px;transition:background .2s" style-hover="background:rgba(255,255,255,.26)">30초 만에 수강료 확인하기</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer data-screen-label="Footer" style="background:#26263A;color:#B9B9C6;padding:48px 22px 120px">
+  <div style="max-width:1080px;margin:0 auto">
+    <div style="font-size:24px;font-weight:800;background:linear-gradient(90deg,#8AA4F2,#C99BF0,#F491C0);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">callmeparis<span style="-webkit-text-fill-color:#F491C0">.</span></div>
+    <p style="margin:12px 0 24px;font-size:14px;color:#8C8C9C;max-width:420px;line-height:1.6">전화로 배우는 진짜 불어. 언제 어디서나 파리 출신 원어민 강사와 함께하세요.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 30px;font-size:13.5px;line-height:1.7;border-top:1px solid #3A3A4C;padding-top:24px">
+      <sc-for list="{{ legal }}" as="l" hint-placeholder-count="6">
+        <div><span style="color:#75758A">{{ l.k }}</span>　<span style="color:#C8C8D4;font-weight:500">{{ l.v }}</span></div>
+      </sc-for>
+    </div>
+    <div style="margin-top:26px;font-size:12.5px;color:#62627A">© 2026 MIRINAEFR. All rights reserved.</div>
+  </div>
+</footer>
+
+<!-- MOBILE SCROLL TOP -->
+<sc-if value="{{ showTopBtn }}" hint-placeholder-val="">
+  <button onClick="{{ scrollTop }}" aria-label="위로" style="position:fixed;right:16px;bottom:84px;z-index:41;width:48px;height:48px;border-radius:50%;border:1px solid #EAEAF0;background:#fff;color:#5B7FE8;font-size:20px;font-weight:800;cursor:pointer;box-shadow:0 8px 22px rgba(45,45,58,.18)">↑</button>
+</sc-if>
+
+<!-- MOBILE STICKY CTA -->
+<sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;gap:9px;padding:11px 14px calc(11px + env(safe-area-inset-bottom));background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-top:1px solid #EDEDF2">
+    <a href="https://mirinaefr.github.io/cmpdevis/" target="_blank" style="flex:1;text-align:center;text-decoration:none;padding:14px;border-radius:13px;background:#fff;color:#5B7FE8;border:2px solid #D9E0F7;font-weight:700;font-size:14.5px">수강료 확인</a>
+    <a href="https://pf.kakao.com/_xnxdDxmT" target="_blank" style="flex:1.4;text-align:center;text-decoration:none;padding:14px;border-radius:13px;background:linear-gradient(135deg,#5B7FE8,#7C5CFC);color:#fff;font-weight:700;font-size:14.5px;box-shadow:0 8px 20px rgba(91,127,232,.3)">체험 신청 (1만원)</a>
+  </div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { isMobile: false, menuOpen: false, openFaq: 0, showTop: false };
+
+  componentDidMount() {
+    this._sync = () => {
+      const m = window.innerWidth < 860;
+      if (m !== this.state.isMobile) this.setState({ isMobile: m, menuOpen: m ? this.state.menuOpen : false });
+    };
+    this._sync();
+    window.addEventListener('resize', this._sync);
+
+    this._onScroll = () => {
+      const s = window.scrollY > 520;
+      if (s !== this.state.showTop) this.setState({ showTop: s });
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+
+    // scroll reveal
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          const el = e.target;
+          el.style.transitionDelay = ((el.__d || 0) * 70) + 'ms';
+          el.style.opacity = '1';
+          el.style.transform = 'none';
+          io.unobserve(el);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    requestAnimationFrame(() => {
+      document.querySelectorAll('[data-reveal]').forEach((el) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(26px)';
+        el.style.transition = 'opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1)';
+        io.observe(el);
+      });
+      // counters
+      const cio = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          const el = e.target; cio.unobserve(el);
+          const target = parseInt(el.getAttribute('data-count'), 10) || 0;
+          const dur = 1400, t0 = performance.now();
+          const tick = (now) => {
+            const p = Math.min(1, (now - t0) / dur);
+            const eased = 1 - Math.pow(1 - p, 3);
+            el.textContent = Math.round(target * eased).toLocaleString();
+            if (p < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        });
+      }, { threshold: 0.5 });
+      document.querySelectorAll('[data-count]').forEach((el) => cio.observe(el));
+    });
+  }
+
+  componentWillUnmount() { window.removeEventListener('resize', this._sync); window.removeEventListener('scroll', this._onScroll); }
+
+  renderVals() {
+    const faqData = [
+      { q: '전화는 어떻게 받나요? 수업 가능한 시간은요?', a: '등록하실 때 알려주신 전화 번호로 연락드립니다. 기타 비용 없이 편하게 받아주시면 됩니다.\n\n수업 가능한 시간은 사전 협의가 필요하지만 보통 월-금 오전 10시부터 오후 10시까지 수업이 가능합니다.' },
+      { q: '수업 시간은 어떻게 되나요?', a: 'callmeparis.는 다른 학원과 달리, 수강생이 신청한 과정의 예정된 시간을 엄격히 준수합니다. 수업은 1~2분 일찍 종료되는 대신에, 실제로 1~2분 정도 더 진행될 수 있어 수강생들에게 추가적인 교육 시간을 제공합니다.' },
+      { q: '공휴일에 수업하나요?', a: '한국의 공휴일은 수업이 쉬는 날입니다. 수강을 신청하실 때에는 수업 날짜를 정확히 확인하시고 공휴일 여부도 꼭 확인해 주시기 바랍니다.' },
+      { q: '결석에 대해 알고 싶어요.', a: '강사 결석: 강사가 결석할 경우, 해당 수업은 연기되며 학생에게는 2회의 보상이 제공됩니다.\n\n수강생 결석: 다만, 수강생이 결석하는 경우, 해당 수업은 결석 처리되며 연기되지 않습니다. 만약 선생님이 전화를 3번 시도하였으나 수강생이 전화를 받지 않은 경우, 수강생의 결석으로 처리됩니다.' },
+      { q: '수업 연기하고 싶어요.', a: 'callmeparis.에서는 수강생이 수업을 진행하기 어려운 경우에는 수업을 연기할 수 있습니다. 수업 연기 신청은 수업 시작 6시간 전까지 가능하며, 연기 신청 시 수업 보강 일정은 카카오 채널을 통해 문의하고 신청하실 수 있습니다. 단, 수업 보강은 수강 종료일 이전까지만 가능하며 한 번 연기된 수업(보강 수업)은 재연기하실 수 없다는 점 참고 부탁드립니다.' },
+      { q: '환불 정책은 어떻게 되나요?', a: 'callmeparis.는 학원법과 동일한 환불 정책을 적용하고 있습니다.\n① 수업 시작 전: 전액 환불\n② 총 수업 시간의 1/3이 경과하기 전: 이미 납입한 수강료의 2/3에 해당되는 금액 환불\n③ 총 수업 시간의 1/2이 경과하기 전: 이미 납입한 수강료의 1/2에 해당되는 금액 환불\n④ 총 수업 시간의 1/2이 경과한 후: 반환하지 아니함' },
+      { q: '결제는 어떻게 하나요?', a: 'callmeparis.는 선불 규칙으로 진행합니다. 결제 방법은 입금만 가능하며 결제 확인 후 수업 가능합니다.' }
+    ];
+
+    const faqs = faqData.map((f, i) => ({
+      n: i + 1, q: f.q, a: f.a,
+      open: this.state.openFaq === i,
+      rot: this.state.openFaq === i ? 'rotate(180deg)' : 'rotate(0deg)',
+      toggle: () => this.setState({ openFaq: this.state.openFaq === i ? -1 : i })
+    }));
+
+    const m = this.state.isMobile;
+
+    const statGridStyle = m
+      ? 'display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:30px'
+      : 'display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px;margin-top:44px';
+    const statCardStyle = m
+      ? 'background:#fff;border:1px solid #EEEEF3;border-radius:16px;padding:18px 8px;box-shadow:0 6px 18px rgba(45,45,58,.05);transition:transform .25s,box-shadow .25s'
+      : 'background:#fff;border:1px solid #EEEEF3;border-radius:22px;padding:36px 24px;box-shadow:0 8px 30px rgba(45,45,58,.06);transition:transform .25s,box-shadow .25s';
+    const statNumStyle = m
+      ? 'font-size:21px;font-weight:800;letter-spacing:-.02em;color:#26263A;line-height:1;white-space:nowrap'
+      : 'font-size:clamp(34px,5vw,46px);font-weight:800;letter-spacing:-.02em;color:#26263A;line-height:1;white-space:nowrap';
+    const statLabelStyle = m
+      ? 'margin-top:8px;color:#6A6A78;font-weight:600;font-size:11px;line-height:1.35'
+      : 'margin-top:12px;color:#6A6A78;font-weight:600;font-size:15px';
+
+    const painGridStyle = 'display:grid;grid-template-columns:1fr 1fr;gap:' + (m ? '10px' : '14px') + ';max-width:' + (m ? '380px' : '620px') + ';margin:0 auto';
+    const painCardStyle = 'display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;border:1px solid #EEEEF3;border-radius:16px;padding:' + (m ? '14px 10px' : '18px 16px') + ';box-shadow:0 5px 16px rgba(45,45,58,.05);transition:transform .22s';
+    const painIconStyle = 'flex:none;width:' + (m ? '34px;height:34px' : '40px;height:40px') + ';border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:' + (m ? '16px' : '19px');
+    const painTextStyle = 'font-weight:700;font-size:' + (m ? '13.5px' : '16px') + ';color:#33333F';
+
+    const methodRowStyle = (m ? 'flex-direction:column;align-items:stretch;gap:16px;padding:18px;' : 'flex-wrap:wrap;align-items:center;gap:30px;padding:26px;') + 'display:flex;background:#fff;border:1px solid #EEEEF3;border-radius:24px;box-shadow:0 8px 30px rgba(45,45,58,.06)';
+    const methodTextStyle = m ? 'width:100%' : 'flex:1 1 280px;min-width:220px';
+    const methodIlloBase = 'border-radius:18px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;';
+    const methodIlloStyle = methodIlloBase + (m ? 'flex:none;width:100%;height:175px;' : 'flex:none;width:230px;height:175px;');
+    const methodIlloStyleTall = methodIlloStyle;
+
+    const teacherCardStyle = (m ? 'flex-wrap:nowrap;gap:16px;padding:18px;align-items:center;' : 'flex-wrap:wrap;gap:24px;padding:30px;align-items:center;') + 'grid-column:1/-1;display:flex;background:linear-gradient(135deg,#EEF1FD,#F6EEFB);border-radius:24px;box-shadow:0 8px 30px rgba(45,45,58,.05)';
+    const teacherPhotoStyle = (m ? 'flex:none;width:104px;height:130px;' : 'flex:none;width:138px;height:174px;') + 'border-radius:18px;overflow:hidden;box-shadow:0 14px 32px rgba(91,127,232,.26)';
+
+    return {
+      statGridStyle, statCardStyle, statNumStyle, statLabelStyle,
+      painGridStyle, painCardStyle, painIconStyle, painTextStyle,
+      methodRowStyle, methodTextStyle, methodIlloStyle, methodIlloStyleTall,
+      teacherCardStyle, teacherPhotoStyle,
+      scrollTop: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
+      desktop: !this.state.isMobile,
+      mobile: this.state.isMobile,
+      menuOpen: this.state.menuOpen,
+      toggleMenu: () => this.setState({ menuOpen: !this.state.menuOpen }),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      stop: (e) => e.stopPropagation(),
+      marqueeText: '　언제 어디서나 원어민 강사와 프랑스어 BOOST 🚀　',
+
+      navLinks: [
+        { label: '홈화면', href: '#home' },
+        { label: '인트로', href: '#intro' },
+        { label: '과정 안내', href: '#courses' },
+        { label: '강의 방식', href: '#method' },
+        { label: '수업 후기', href: '#reviews' },
+        { label: '강사 소개', href: '#teacher' },
+        { label: 'FAQ', href: '#faq' }
+      ],
+
+      stats: [
+        { num: 14, suffix: '년', icon: '📅', label: '강의 & 델프/달프 경력', color: '#EC4899', bg: '#FCEBF4' },
+        { num: 1300, suffix: '명', icon: '👥', label: '누적 학생', color: '#5B7FE8', bg: '#EEF1FD' },
+        { num: 1, suffix: '만시간', icon: '⏱️', label: '누적 강의', color: '#4CAF50', bg: '#EAF6EC' }
+      ],
+
+      pains: [
+        { icon: '😰', text: '말하기 자신감 없어요', bg: '#EEF1FD' },
+        { icon: '⏰', text: '불규칙한 일정이에요', bg: '#FFF4E0' },
+        { icon: '🙈', text: '얼굴 공개는 불편해요', bg: '#FCEBF4' },
+        { icon: '📍', text: '주변에 학원 없어요', bg: '#EAF6EC' }
+      ],
+
+      courses: [
+        { no:'01', color:'#EC4899', bg:'#FCEBF4', icon:'💬', title:'프랑스어 연습', href:'https://pf.kakao.com/_xnxdDxmT', target:'_blank',
+          desc:'일반 회화 또는 실제 프랑스 뉴스 기사로 말하기 연습. 수업 전 PDF 자료 또는 기사 전달, 수업 후 1시간 내 상세 피드백.',
+          points:['15분 또는 30분 · 주 1~3회','수업 전 PDF/기사 + 수업 후 피드백','가장 인기 있는 과정'], promo:'첫 등록 시 15% 할인 행사 중', badge:'', cta:'' },
+        { no:'02', color:'#F5A623', bg:'#FFF4E0', icon:'🎓', title:'델프/달프 구술 시험 준비', href:'https://pf.kakao.com/_xnxdDxmT', target:'_blank',
+          desc:'B1·B2·C1·C2 / 14년 경력 DELF/DALF 채점관 출신 강사가 실제 시험과 동일한 형식으로 진행. 기사 요약, 의견 제시, 면접관 질문까지.',
+          points:['30분 · 주 2회','주간 리포트 + 레벨별 맞춤 프로그램','2개월 과정'], promo:'첫 등록 시 15% 할인', badge:'', cta:'' },
+        { no:'03', color:'#5B7FE8', bg:'#EEF1FD', icon:'✈️', title:'여행 프랑스어', href:'https://pf.kakao.com/_xnxdDxmT', target:'_blank',
+          desc:'프랑스 여행에서 바로 쓸 수 있는 실전 표현. 빵집·카페 주문, 레스토랑 예약, 호텔 체크인, 관광지 질문, 긴급 상황 대처까지 1시간에 마스터.',
+          points:['60분 · 1회 완결','5가지 실전 상황별 표현 정리','연습용 오디오 파일 제공'], promo:'', badge:'', cta:'' },
+        { no:'04', color:'#7C5CFC', bg:'#F3EFFE', icon:'🎧', title:'발음 코칭', href:'https://echo.callmeparis.com/', target:'_blank',
+          desc:'PDF 텍스트를 읽고 녹음해서 보내면, 강사가 발음 교정 오디오 피드백을 보내드립니다. 내 시간에 맞춰 연습하고 실력을 키울 수 있는 비동기식 코칭.',
+          points:['주 2회 · 4주 프로그램','전화 없이 · 녹음 + 오디오 피드백','Écho 프로그램으로 운영'], promo:'', badge:'NEW',
+          cta:'Écho 자세히 보기', ctaStyle:'margin-top:18px;display:inline-flex;align-items:center;gap:7px;padding:13px 22px;border-radius:13px;background:linear-gradient(135deg,#7C5CFC,#9A7BF5);color:#fff;font-weight:800;font-size:15px;box-shadow:0 8px 20px rgba(124,92,252,.34)' }
+      ],
+
+      reviews: [
+        { initial:'감', name:'감지O', role:'학생', date:'2024.11.13', bg:'#5B7FE8',
+          text:'지금까지 정말 다양한 화상프랑스어를 진행했는데 이제 콜미파리로 정착입니다!! 화상의 경우 얼굴 보고 인사하거나 일상을 공유하는 시간이 포함되어 시험 준비가 힘들었는데, 콜미파리는 DELF 시험을 준비하는 학생들에게 정말 맞춤이예요!!' },
+        { initial:'김', name:'김주O', role:'학생', date:'2025.03.17', bg:'#7C5CFC',
+          text:'알아듣기 쉽게 천천히 말하고, 모르는 단어나 문장이 있으면 예시를 들어주었습니다. 틀리는 발음이 있으면 바로바로 고쳐줘서 계속 기억할 수 있게 해주셨습니다. 시사 뉴스로 수업을 진행하여 정말 다양한 주제로 이야기를 나눌 수 있어서 좋았습니다.' },
+        { initial:'서', name:'서정O', role:'회사원', date:'2025.05.09', bg:'#EC4899',
+          text:'강의 자료를 매우 성실하게 준비해주셔서 좋았습니다! 실제 시험에 나올법한 주제라는 생각이 들었습니다. 수업 중에는 제 얘기를 매우 잘 들어주시고, 적절한 피드백을 주셔서 점점 말하기에 자신감이 붙은 것 같습니다.' },
+        { initial:'진', name:'진화O', role:'학생', date:'2025.05.21', bg:'#5B7FE8',
+          text:'수업시간 내내 계속 이야기를 할 수 있는 점이 좋았습니다. 전화 수업은 지체되는 시간이 없어서 제가 더 많이 말할 수 있었어요. 선생님 발음이 완전 바르고 정확하셔서 도움을 많이 받았습니다! 자료를 전날에 미리 보내주셔서 예습 후 사용해볼 수 있어 좋았어요.' },
+        { initial:'김', name:'김수O', role:'회사원', date:'2025.04.02', bg:'#F5A623',
+          text:'강사님께서 준비된 수업 자료에 있는 질문은 다 하시는 편이라서 종종 15분이 넘어 갈때도 있는데 수업 흐름이 끊기지 않아서 좋습니다. 발음을 또박또박 천천히 해주시는 편이고 제 답변에 집중해주십니다.' },
+        { initial:'이', name:'이호O', role:'학생', date:'2025.05.31', bg:'#7C5CFC',
+          text:'강사님께서 친절하시고 끝까지 말할 수 있도록 기다려주셔서 좋았습니다! 또한 학습지가 매우 체계적이라고 느꼈습니다.' }
+      ],
+
+      profile: ['프랑스 파리 출신','소르본 대학원 불어 교육 석사','DELF-DALF 감독관 및 채점관 14년 경력','명문대와 유명 학원 총 14년 경력'],
+      career: [
+        { year:'2019 -', org:'callmeparis.' },
+        { year:'2015 - 2021', org:'강남 알리앙스 프랑세즈' },
+        { year:'2013 - 2015', org:'대한민국 육군사관학교' },
+        { year:'2012 - 2013', org:'인천 알리앙스 프랑세즈' }
+      ],
+      expertise: [
+        'A1(초급)~C2(고급) 모든 레벨에서 10년 이상의 수업 경험을 갖춘 원어민 프랑스어 강사',
+        'DELF/DALF 감독관 및 채점관 경력으로 시험 고득점 노하우 전달 가능',
+        '개별 학생의 수업 목표 및 수준을 고려한 눈높이 강의 진행 경력 다수',
+        '고급 한국어 구사가 가능하여, 필요 시 한국어로 수업 설명 가능'
+      ],
+
+      faqs,
+
+      legal: [
+        { k:'상호', v:'미리내프랑스(MIRINAEFR)' },
+        { k:'대표명', v:'SMIGIELSKI STANISLAS YACINE' },
+        { k:'사업자등록번호', v:'170-09-01295' },
+        { k:'통신판매업신고번호', v:'2023-서울강남-02741' },
+        { k:'이메일', v:'callmepariskr@gmail.com' },
+        { k:'주소', v:'서울특별시 강남구 삼성동 144-20 JS TOWER 5층 브이512호' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
